@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BUH Automation &amp; Governance Lab</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <button class="menu-toggle" aria-label="Toggle navigation">&#9776;</button>
+
+  <nav class="sidebar">
+    <div class="sidebar-header">
+      <h2>BUH Automation Lab</h2>
+      <p>Brown University Health</p>
+    </div>
+    <ul class="nav-list">
+      <li class="nav-item" data-step="0">Welcome &amp; Goals <span class="time-badge">10 min</span></li>
+      <li class="nav-item" data-step="1">Setup &amp; Explore <span class="time-badge">10 min</span></li>
+      <li class="nav-item" data-step="2">Parameterized Imports <span class="time-badge">25 min</span></li>
+      <li class="nav-item" data-step="3">Vendor Ingestion <span class="time-badge">20 min</span></li>
+      <li class="nav-item" data-step="4">Logging &amp; Monitoring <span class="time-badge">20 min</span></li>
+      <li class="nav-item" data-step="5">Governance &amp; Masking <span class="time-badge">20 min</span></li>
+      <li class="nav-item" data-step="6">AI Capstone <span class="time-badge">10 min</span></li>
+      <li class="nav-item" data-step="7">Recap &amp; Cleanup <span class="time-badge">5 min</span></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <div class="top-bar">
+      <span class="progress-text">Step 1 of 8</span>
+      <button class="theme-toggle">Toggle Dark Mode</button>
+    </div>
+
+    <!-- ===================== STEP 0: Welcome ===================== -->
+    <section class="step active" id="step-0">
+      <h2>Welcome &amp; Goals</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">0:00 - 0:10</span>
+      </div>
+
+      <p>Welcome to the Brown University Health Automation &amp; Governance Hands-On Lab. In the next two hours, you will replace a hand-coded Epic Clarity import with a <strong>parameterized, observable, governed pipeline</strong> - and watch it handle unexpected input along the way.</p>
+
+      <h3>What we will build</h3>
+      <ol>
+        <li><strong>Configuration-driven imports</strong> - one procedure, any Clarity table</li>
+        <li><strong>Resilient vendor ingestion</strong> - validation, quarantine, schema drift detection</li>
+        <li><strong>Centralized logging</strong> - structured events, operational dashboards</li>
+        <li><strong>Governance &amp; masking</strong> - reusable policies that mask data by role</li>
+        <li><strong>AI capstone</strong> (optional) - automated annotation of clinical notes and imaging metadata</li>
+      </ol>
+
+      <h3>What this is NOT</h3>
+      <p>This is not a feature tour. Every exercise connects to the same pipeline. The goal is <em>one working workflow</em>, not seven disconnected demos.</p>
+
+      <h3>Prerequisites</h3>
+      <ol>
+        <li><strong>Get a Snowflake trial</strong> (if you do not already have an account): <a href="https://signup.snowflake.com/" target="_blank">signup.snowflake.com</a> - choose Enterprise edition, any cloud/region</li>
+        <li><strong>Log in</strong> to your Snowflake account with the ACCOUNTADMIN role</li>
+        <li><strong>Clone the lab repo</strong> into a Snowflake Git Integration workspace, or download the <code>scripts/</code> folder and open the files in Snowsight or Cortex Code</li>
+      </ol>
+
+      <div class="step-nav">
+        <span></span>
+        <button class="nav-btn nav-btn-next">Get Started &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 1: Setup ===================== -->
+    <section class="step" id="step-1">
+      <h2>Setup &amp; Explore the Data</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">0:10 - 0:20</span>
+        <span class="badge badge-script">00_setup.sql</span>
+      </div>
+
+      <p>Run the setup script to create the lab database, schemas, roles, and synthetic data. Everything uses fabricated records - no real patient data.</p>
+
+      <h3>1.1 Run the setup script</h3>
+      <p>Open <code>scripts/00_setup.sql</code> in your SQL worksheet and run it end-to-end.</p>
+
+      <div class="callout callout-info">
+        <strong>Tip</strong>
+        If your warehouse is not named COMPUTE_WH, edit the USE WAREHOUSE line at the top of the script before running.
+      </div>
+
+      <h3>1.2 Verify the setup</h3>
+      <p>The final query in the script shows row counts. Confirm they match:</p>
+
+      <div class="expected-output">
+        <strong>Expected output</strong>
+        CLINICAL_NOTES: 3 | ENCOUNTER_FACT: 10 | IMAGE_METADATA: 3 | IMPORT_CONFIG: 3 | OMICS_METADATA: 2 | ORDERS: 10 | PATIENT_DIM: 8 | VENDOR_LAB_BATCH_DRIFTED: 2 | VENDOR_LAB_BATCH_GOOD: 5 | VENDOR_LAB_BATCH_INVALID: 4
+      </div>
+
+      <h3>1.3 Explore the data</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Look at what a Clarity extract looks like
+SELECT * FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 5;
+SELECT * FROM BUH_AUTOMATION_LAB.RAW.ENCOUNTER_FACT LIMIT 5;
+SELECT * FROM BUH_AUTOMATION_LAB.RAW.ORDERS LIMIT 5;
+
+-- Look at the import config
+SELECT * FROM BUH_AUTOMATION_LAB.CURATED.IMPORT_CONFIG;</pre>
+      </div>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>You should see 8 patients, 10 encounters, 10 orders, and 3 config rows. If any count is off, re-run the setup script from the top.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Parameterized Imports &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 2: Parameterized Imports ===================== -->
+    <section class="step" id="step-2">
+      <h2>Parameterized Imports &amp; Reusable Code</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">0:20 - 0:45</span>
+        <span class="badge badge-script">01_parameterized_imports.sql</span>
+      </div>
+
+      <p>Right now, importing each Clarity table means writing a bespoke CTAS statement. For 50+ tables, that is 50+ scripts to maintain. We are going to replace that with <strong>one procedure and one config table</strong>.</p>
+
+      <h3>2.1 The problem</h3>
+      <p>Run Part A in the script to see the hand-coded approach:</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL - The old way</span><button class="copy-btn">Copy</button></div>
+        <pre>CREATE OR REPLACE TABLE CURATED.DIM_PATIENT AS
+SELECT
+    PAT_ID, PAT_MRN, PAT_FIRST_NAME, PAT_LAST_NAME,
+    BIRTH_DATE, SSN, ADDRESS_LINE_1, CITY, STATE,
+    ZIP_CODE, PHONE, EMAIL, GENDER,
+    CURRENT_TIMESTAMP() AS LOADED_AT
+FROM RAW.PATIENT_DIM;</pre>
+      </div>
+      <p>Now imagine writing that for every table. Every one is slightly different. Every one can have a typo.</p>
+
+      <h3>2.2 The config-driven approach</h3>
+      <p>Check the config table that defines each import:</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT * FROM BUH_AUTOMATION_LAB.CURATED.IMPORT_CONFIG;</pre>
+      </div>
+
+      <h3>2.3 Build the procedure</h3>
+      <p>Run Part C in the script to create the <code>RUN_IMPORT</code> procedure. This single procedure reads config, builds dynamic SQL, executes the import, and logs what it did.</p>
+
+      <h3>2.4 Run the imports</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>CALL CURATED.RUN_IMPORT('PATIENT_DIM', 'BATCH-2024-10-25-001');
+CALL CURATED.RUN_IMPORT('ENCOUNTER_FACT', 'BATCH-2024-10-25-001');
+CALL CURATED.RUN_IMPORT('ORDERS', 'BATCH-2024-10-25-001');</pre>
+      </div>
+
+      <h3>2.5 Verify</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Config should show SUCCESS for all three
+SELECT SOURCE_TABLE, TARGET_TABLE, LAST_RUN_TS, LAST_RUN_STATUS
+FROM CURATED.IMPORT_CONFIG;
+
+-- Log entries for the batch
+SELECT * FROM LOGS.RUN_LOG ORDER BY LOGGED_AT DESC LIMIT 10;</pre>
+      </div>
+
+      <div class="callout callout-success">
+        <strong>Key insight</strong>
+        Adding a new Clarity table is now a single INSERT into IMPORT_CONFIG - no new code, no new script, no new deployment.
+      </div>
+
+      <h3>2.6 Bonus: run all imports in one call</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>CALL CURATED.RUN_ALL_IMPORTS('BATCH-2024-10-25-002');</pre>
+      </div>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>All three config rows show LAST_RUN_STATUS = SUCCESS. DIM_PATIENT, FACT_ENCOUNTER, and FACT_ORDERS exist in CURATED with BATCH_ID and LOADED_AT columns.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Vendor Ingestion &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 3: Vendor Ingestion ===================== -->
+    <section class="step" id="step-3">
+      <h2>Resilient Vendor File Ingestion</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">0:45 - 1:05</span>
+        <span class="badge badge-script">02_vendor_ingestion.sql</span>
+      </div>
+
+      <p>External vendor lab files are messy. Columns appear and disappear. Required fields go missing. Your pipeline needs to handle this without crashing and without silently loading bad data.</p>
+
+      <h3>3.1 Explore the three payloads</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Good batch: matches expected schema
+SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_GOOD;
+
+-- Drifted batch: has extra columns the vendor added
+SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_DRIFTED;
+
+-- Invalid batch: missing required fields, bad formats
+SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_INVALID;</pre>
+      </div>
+
+      <h3>3.2 Build the validator</h3>
+      <p>Run Part B in the script to create the validation function. It checks each row against business rules and returns a pass/fail verdict with specific reasons.</p>
+
+      <h3>3.3 Process each batch</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Good batch: all rows accepted
+CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_GOOD', 'GOOD-001');
+
+-- Drifted batch: rows accepted, but drift logged as WARN
+CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_DRIFTED', 'DRIFT-001');
+
+-- Invalid batch: bad rows quarantined with reasons
+CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_INVALID', 'INVALID-001');</pre>
+      </div>
+
+      <h3>3.4 Inspect results</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- 7 accepted, 4 quarantined
+SELECT 'ACCEPTED' AS STATUS, COUNT(*) AS CNT FROM VENDOR_LANDING.VENDOR_LAB_ACCEPTED
+UNION ALL
+SELECT 'QUARANTINED', COUNT(*) FROM VENDOR_LANDING.VENDOR_LAB_QUARANTINE;
+
+-- See WHY rows were rejected
+SELECT VENDOR_ID, PAT_MRN, BATCH_ID, REJECTION_REASONS::VARCHAR AS REASONS
+FROM VENDOR_LANDING.VENDOR_LAB_QUARANTINE;</pre>
+      </div>
+
+      <div class="expected-output">
+        <strong>Expected output</strong>
+        ACCEPTED: 7 rows (5 good + 2 drifted) | QUARANTINED: 4 rows (all from invalid batch) | WARN log entries for schema drift and quarantine count
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>Discussion: Idempotency</strong>
+        Re-running a batch currently duplicates rows. In production, you would use MERGE or DELETE+INSERT keyed on BATCH_ID. The reset pattern is shown in Part F of the script.
+      </div>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>Accepted table has 7 rows. Quarantine has 4 rows with specific rejection reasons as arrays. The log shows WARN entries for drift and quarantine counts.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Logging &amp; Monitoring &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 4: Logging ===================== -->
+    <section class="step" id="step-4">
+      <h2>Centralized Logging &amp; Error Reporting</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">1:05 - 1:25</span>
+        <span class="badge badge-script">03_logging_and_monitoring.sql</span>
+      </div>
+
+      <p>Every procedure you built in the previous steps has been writing to the same RUN_LOG table. Now you will query it as a single pane of glass for pipeline observability.</p>
+
+      <h3>4.1 View all log entries</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT * FROM LOGS.RUN_LOG ORDER BY LOGGED_AT DESC;</pre>
+      </div>
+
+      <h3>4.2 Build the batch health view</h3>
+      <p>Run Parts B and C in the script. The BATCH_HEALTH view shows a RED/YELLOW/GREEN status per batch:</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT * FROM LOGS.BATCH_HEALTH;</pre>
+      </div>
+
+      <div class="expected-output">
+        <strong>Expected output</strong>
+        BATCH and GOOD batches show GREEN. DRIFT batch shows YELLOW (warnings). INVALID batch shows YELLOW (quarantine warnings). Any batch with ERRORs would show RED.
+      </div>
+
+      <h3>4.3 Extract structured detail from VARIANT</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT
+    RUN_ID,
+    MESSAGE,
+    DETAIL:rows_loaded::NUMBER AS ROWS_LOADED,
+    DETAIL:target::VARCHAR AS TARGET_TABLE
+FROM LOGS.RUN_LOG
+WHERE DETAIL:rows_loaded IS NOT NULL;</pre>
+      </div>
+
+      <h3>4.4 Reusable logger</h3>
+      <p>Run Part D to create a generic LOG_EVENT procedure. Any future procedure can call it for consistent logging.</p>
+
+      <div class="callout callout-info">
+        <strong>Production extensions</strong>
+        Event tables (SYSTEM$LOG) capture system-level telemetry automatically. Snowflake Alerts can watch RUN_LOG and email on errors. Both are discussed in Parts E and F of the script.
+      </div>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>BATCH_HEALTH view returns colored status per batch. Structured detail fields are queryable from the VARIANT column. The centralized logger works.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Governance &amp; Masking &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 5: Governance ===================== -->
+    <section class="step" id="step-5">
+      <h2>Governance, RBAC &amp; Masking</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">1:25 - 1:45</span>
+        <span class="badge badge-script">04_governance_rbac_masking.sql</span>
+      </div>
+
+      <p>Right now, every role can see every SSN, every phone number, and every encounter. That is not acceptable for production. You will apply <strong>reusable masking policies</strong> and <strong>row-access controls</strong> and test them across three roles.</p>
+
+      <h3>5.1 See the problem</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- All PII visible right now
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
+FROM RAW.PATIENT_DIM LIMIT 5;</pre>
+      </div>
+
+      <h3>5.2 Create and apply masking policies</h3>
+      <p>Run Parts B and C in the script. The SSN_MASK and PII_STRING_MASK policies are created once in the GOVERNANCE schema and applied to multiple columns.</p>
+
+      <h3>5.3 Test across roles</h3>
+      <p>On a trial account your user inherits ACCOUNTADMIN, so a plain <code>USE ROLE</code> switch still resolves the admin check as TRUE. We use <code>EXECUTE USING POLICY_CONTEXT</code> to simulate each role cleanly:</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- ADMIN sees everything
+EXECUTE USING POLICY_CONTEXT(
+    CURRENT_ROLE => 'BUH_LAB_ADMIN'
+)
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
+FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;
+
+-- CLINICIAN sees names and phone, SSN last-4 only
+EXECUTE USING POLICY_CONTEXT(
+    CURRENT_ROLE => 'BUH_LAB_CLINICIAN'
+)
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
+FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;
+
+-- ANALYST sees masked everything
+EXECUTE USING POLICY_CONTEXT(
+    CURRENT_ROLE => 'BUH_LAB_ANALYST'
+)
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
+FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;</pre>
+      </div>
+
+      <div class="expected-output">
+        <strong>Expected results</strong>
+        <table>
+          <tr><th>Role</th><th>First Name</th><th>SSN</th><th>Phone</th></tr>
+          <tr><td>ADMIN</td><td>Maria</td><td>111-22-3333</td><td>401-555-0101</td></tr>
+          <tr><td>CLINICIAN</td><td>Maria</td><td>***-**-3333</td><td>401-555-0101</td></tr>
+          <tr><td>ANALYST</td><td>***MASKED***</td><td>***-**-****</td><td>***MASKED***</td></tr>
+        </table>
+      </div>
+
+      <h3>5.4 Row-access policy</h3>
+      <p>Run Part E. Clinicians can only see encounters from departments they are mapped to (Cardiology and Primary Care). Analysts and admins see everything.</p>
+
+      <h3>5.5 Audit existing policies</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SHOW MASKING POLICIES IN DATABASE BUH_AUTOMATION_LAB;
+SHOW ROW ACCESS POLICIES IN DATABASE BUH_AUTOMATION_LAB;</pre>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>Important</strong>
+        Masking policies on a base table do NOT automatically propagate to CTAS copies. CURATED tables created by RUN_IMPORT are unprotected unless you also apply policies there, use secure views, or use tag-based masking (which does propagate through lineage).
+      </div>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>SSN shows differently for each role. Clinician sees 4 encounters (Cardiology + Primary Care), not all 10. Policy audit queries return the applied policies.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: AI Capstone &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 6: AI Capstone ===================== -->
+    <section class="step" id="step-6">
+      <h2>AI &amp; Multimodal Capstone</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">1:45 - 1:55</span>
+        <span class="badge badge-script">05_ai_multimodal_capstone.sql</span>
+      </div>
+
+      <p>This optional module shows how AI fits <em>into</em> the pipeline you already built - not as a separate initiative, but as an accelerator for annotation, extraction, and cataloging.</p>
+
+      <div class="callout callout-info">
+        <strong>Cortex requirement</strong>
+        Parts A-C use SNOWFLAKE.CORTEX.AI_COMPLETE and AI_EXTRACT. If these are not enabled in your account, use the commented-out fallback queries in the script. The learning point is the pattern, not the model output.
+      </div>
+
+      <h3>6.1 Summarize clinical notes</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT
+    NOTE_ID,
+    NOTE_TYPE,
+    SNOWFLAKE.CORTEX.AI_COMPLETE(
+        'llama3.1-8b',
+        'Summarize this clinical note in 2-3 sentences. '
+        || 'Extract: primary diagnosis, key findings, and plan. Note: '
+        || NOTE_TEXT
+    ) AS AI_SUMMARY
+FROM RAW.CLINICAL_NOTES;</pre>
+      </div>
+
+      <h3>6.2 Extract structured fields</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT
+    NOTE_ID,
+    SNOWFLAKE.CORTEX.AI_EXTRACT(
+        NOTE_TEXT,
+        ARRAY_CONSTRUCT('primary_diagnosis', 'medications', 'follow_up_plan')
+    ) AS EXTRACTED
+FROM RAW.CLINICAL_NOTES;</pre>
+      </div>
+
+      <h3>6.3 Where AI fits in the pipeline</h3>
+      <table>
+        <tr><th>Pipeline Stage</th><th>AI Application</th></tr>
+        <tr><td>Parameterized imports</td><td>AI_COMPLETE for auto-generating column descriptions</td></tr>
+        <tr><td>Vendor ingestion</td><td>AI_EXTRACT to normalize inconsistent vendor formats</td></tr>
+        <tr><td>Logging</td><td>AI_SUMMARIZE on error logs to surface patterns</td></tr>
+        <tr><td>Governance</td><td>SYSTEM$CLASSIFY to detect PII automatically</td></tr>
+      </table>
+
+      <div class="callout callout-success">
+        <strong>Key takeaway</strong>
+        The work in Scripts 01-04 is the foundation. AI accelerates it - it does not replace it.
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Recap &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 7: Recap ===================== -->
+    <section class="step" id="step-7">
+      <h2>Recap &amp; Cleanup</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">1:55 - 2:00</span>
+        <span class="badge badge-script">06_cleanup.sql</span>
+      </div>
+
+      <h3>What you built</h3>
+      <table>
+        <tr><th>Layer</th><th>What</th><th>Key Object</th></tr>
+        <tr><td>Automate</td><td>Config-driven import procedure</td><td>CURATED.RUN_IMPORT</td></tr>
+        <tr><td>Validate</td><td>Vendor ingestion with quarantine</td><td>VENDOR_LANDING.PROCESS_VENDOR_BATCH</td></tr>
+        <tr><td>Observe</td><td>Centralized structured logging</td><td>LOGS.RUN_LOG + BATCH_HEALTH</td></tr>
+        <tr><td>Govern</td><td>Reusable masking and row-access</td><td>GOVERNANCE.SSN_MASK, PII_STRING_MASK</td></tr>
+      </table>
+
+      <h3>Production next steps</h3>
+      <ul>
+        <li><strong>Scheduling</strong> - Wrap RUN_ALL_IMPORTS in a Snowflake Task on a CRON schedule</li>
+        <li><strong>Idempotency</strong> - Switch vendor ingestion to MERGE or DELETE+INSERT</li>
+        <li><strong>Event tables</strong> - Add SYSTEM$LOG calls for system-level telemetry</li>
+        <li><strong>Alerting</strong> - Create Alerts that watch RUN_LOG and email on ERROR</li>
+        <li><strong>Tag-based masking</strong> - Run SYSTEM$CLASSIFY, then attach policies to tags so they follow data through lineage</li>
+        <li><strong>Dynamic tables</strong> - Replace CTAS imports with dynamic tables for incremental refresh</li>
+      </ul>
+
+      <h3>Cleanup</h3>
+      <p>When you are finished, run the cleanup script to remove all lab objects:</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL - 06_cleanup.sql</span><button class="copy-btn">Copy</button></div>
+        <pre>USE ROLE ACCOUNTADMIN;
+DROP DATABASE IF EXISTS BUH_AUTOMATION_LAB;
+DROP ROLE IF EXISTS BUH_LAB_CLINICIAN;
+DROP ROLE IF EXISTS BUH_LAB_ANALYST;
+DROP ROLE IF EXISTS BUH_LAB_ADMIN;</pre>
+      </div>
+
+      <div class="callout callout-success">
+        <strong>Thank you!</strong>
+        Questions, feedback, or follow-up requests are welcome. The repository contains everything you need to re-run this lab independently.
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <span></span>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/lab.js"></script>
+</body>
+</html>
