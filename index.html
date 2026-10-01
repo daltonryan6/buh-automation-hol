@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUH Automation &amp; Governance Lab</title>
+  <title>BUH Hands-On Lab</title>
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -11,455 +11,401 @@
 
   <nav class="sidebar">
     <div class="sidebar-header">
-      <h2>BUH Automation Lab</h2>
+      <h2>BUH Hands-On Lab</h2>
       <p>Brown University Health</p>
     </div>
     <ul class="nav-list">
-      <li class="nav-item" data-step="0">Welcome &amp; Goals <span class="time-badge">10 min</span></li>
-      <li class="nav-item" data-step="1">Setup &amp; Explore <span class="time-badge">10 min</span></li>
-      <li class="nav-item" data-step="2">Parameterized Imports <span class="time-badge">25 min</span></li>
-      <li class="nav-item" data-step="3">Vendor Ingestion <span class="time-badge">20 min</span></li>
-      <li class="nav-item" data-step="4">Logging &amp; Monitoring <span class="time-badge">20 min</span></li>
-      <li class="nav-item" data-step="5">Governance &amp; Masking <span class="time-badge">20 min</span></li>
-      <li class="nav-item" data-step="6">AI Capstone <span class="time-badge">10 min</span></li>
-      <li class="nav-item" data-step="7">Recap &amp; Cleanup <span class="time-badge">5 min</span></li>
+      <li class="nav-item" data-step="0">Welcome &amp; Setup <span class="time-badge">10 min</span></li>
+      <li class="nav-item" data-step="1">Shared Workspaces <span class="time-badge">15 min</span></li>
+      <li class="nav-item" data-step="2">Dynamic Tables <span class="time-badge">30 min</span></li>
+      <li class="nav-item" data-step="3">Power BI &amp; Iceberg <span class="time-badge">25 min</span></li>
+      <li class="nav-item" data-step="4">Tags &amp; Governance <span class="time-badge">25 min</span></li>
+      <li class="nav-item" data-step="5">Putting It Together <span class="time-badge">10 min</span></li>
+      <li class="nav-item" data-step="6">Recap &amp; Cleanup <span class="time-badge">5 min</span></li>
     </ul>
   </nav>
 
   <main class="main">
     <div class="top-bar">
-      <span class="progress-text">Step 1 of 8</span>
+      <span class="progress-text">Step 1 of 7</span>
       <button class="theme-toggle">Toggle Dark Mode</button>
     </div>
 
     <!-- ===================== STEP 0: Welcome ===================== -->
     <section class="step active" id="step-0">
-      <h2>Welcome &amp; Goals</h2>
+      <h2>Welcome &amp; Setup</h2>
       <div class="step-meta">
         <span class="badge badge-time">0:00 - 0:10</span>
-      </div>
-
-      <p>Welcome to the Brown University Health Automation &amp; Governance Hands-On Lab. In the next two hours, you will replace a hand-coded Epic Clarity import with a <strong>parameterized, observable, governed pipeline</strong> - and watch it handle unexpected input along the way.</p>
-
-      <h3>What we will build</h3>
-      <ol>
-        <li><strong>Configuration-driven imports</strong> - one procedure, any Clarity table</li>
-        <li><strong>Resilient vendor ingestion</strong> - validation, quarantine, schema drift detection</li>
-        <li><strong>Centralized logging</strong> - structured events, operational dashboards</li>
-        <li><strong>Governance &amp; masking</strong> - reusable policies that mask data by role</li>
-        <li><strong>AI capstone</strong> (optional) - automated annotation of clinical notes and imaging metadata</li>
-      </ol>
-
-      <h3>What this is NOT</h3>
-      <p>This is not a feature tour. Every exercise connects to the same pipeline. The goal is <em>one working workflow</em>, not seven disconnected demos.</p>
-
-      <h3>Prerequisites</h3>
-      <ol>
-        <li><strong>Get a Snowflake trial</strong> (if you do not already have an account): <a href="https://signup.snowflake.com/" target="_blank">signup.snowflake.com</a> - choose Enterprise edition, any cloud/region</li>
-        <li><strong>Log in</strong> to your Snowflake account with the ACCOUNTADMIN role</li>
-        <li><strong>Clone the lab repo</strong> into a Snowflake Git Integration workspace, or download the <code>scripts/</code> folder and open the files in Snowsight or Cortex Code</li>
-      </ol>
-
-      <div class="step-nav">
-        <span></span>
-        <button class="nav-btn nav-btn-next">Get Started &rarr;</button>
-      </div>
-    </section>
-
-    <!-- ===================== STEP 1: Setup ===================== -->
-    <section class="step" id="step-1">
-      <h2>Setup &amp; Explore the Data</h2>
-      <div class="step-meta">
-        <span class="badge badge-time">0:10 - 0:20</span>
         <span class="badge badge-script">00_setup.sql</span>
       </div>
 
-      <p>Run the setup script to create the lab database, schemas, roles, and synthetic data. Everything uses fabricated records - no real patient data.</p>
+      <h3>What we will cover</h3>
+      <ol>
+        <li><strong>Shared Workspaces</strong> - Git integration, versioned SQL, team collaboration</li>
+        <li><strong>Dynamic Tables</strong> - Declarative pipelines that auto-refresh RAW to CURATED to GOLD</li>
+        <li><strong>Power BI, Iceberg &amp; Fabric</strong> - Connection options, Iceberg for gold layer, Fabric cost, Purview</li>
+        <li><strong>Tags &amp; Governance</strong> - Where tags apply, sensitivity labels, tag-based masking</li>
+      </ol>
 
-      <h3>1.1 Run the setup script</h3>
-      <p>Open <code>scripts/00_setup.sql</code> in your SQL worksheet and run it end-to-end.</p>
+      <h3>Prerequisites</h3>
+      <ol>
+        <li><strong>Get a Snowflake trial</strong> (if needed): <a href="https://signup.snowflake.com/" target="_blank">signup.snowflake.com</a> - choose Enterprise edition, any cloud/region</li>
+        <li><strong>Log in</strong> with the ACCOUNTADMIN role</li>
+        <li><strong>Clone the lab repo</strong> or download the <code>scripts/</code> folder</li>
+      </ol>
 
-      <div class="callout callout-info">
-        <strong>Tip</strong>
-        If your warehouse is not named COMPUTE_WH, edit the USE WAREHOUSE line at the top of the script before running.
-      </div>
-
-      <h3>1.2 Verify the setup</h3>
-      <p>The final query in the script shows row counts. Confirm they match:</p>
+      <h3>Run the setup script</h3>
+      <p>Open <code>scripts/00_setup.sql</code> and run it end-to-end. It creates the database, schemas, roles, and all synthetic data.</p>
 
       <div class="expected-output">
-        <strong>Expected output</strong>
-        CLINICAL_NOTES: 3 | ENCOUNTER_FACT: 10 | IMAGE_METADATA: 3 | IMPORT_CONFIG: 3 | OMICS_METADATA: 2 | ORDERS: 10 | PATIENT_DIM: 8 | VENDOR_LAB_BATCH_DRIFTED: 2 | VENDOR_LAB_BATCH_GOOD: 5 | VENDOR_LAB_BATCH_INVALID: 4
+        <strong>Expected output (checkpoint query at the end)</strong>
+        ENCOUNTER_FACT: 10 | LAB_RESULTS: 10 | PATIENT_DIM: 8 | PROVIDER_DIM: 8
       </div>
 
-      <h3>1.3 Explore the data</h3>
+      <div class="step-nav">
+        <span></span>
+        <button class="nav-btn nav-btn-next">Next: Shared Workspaces &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 1: Workspaces ===================== -->
+    <section class="step" id="step-1">
+      <h2>Shared Workspaces &amp; Git Integration</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">0:10 - 0:25</span>
+        <span class="badge badge-script">01_workspaces_and_git.sql</span>
+      </div>
+
+      <p>Workspaces are Snowflake's built-in way to connect a Git repo (GitHub, GitLab, Azure DevOps) to your Snowflake account. This lab itself was delivered via a Git workspace.</p>
+
+      <h3>What you can do</h3>
+      <ul>
+        <li><strong>Browse</strong> - Navigate repo files directly in Snowsight</li>
+        <li><strong>Run</strong> - Execute .sql files from the repo without downloading</li>
+        <li><strong>Version</strong> - Every change goes through Git (history, review, rollback)</li>
+        <li><strong>Collaborate</strong> - Team members clone and run the same versioned code</li>
+      </ul>
+
+      <h3>How it works</h3>
       <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- Look at what a Clarity extract looks like
-SELECT * FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 5;
-SELECT * FROM BUH_AUTOMATION_LAB.RAW.ENCOUNTER_FACT LIMIT 5;
-SELECT * FROM BUH_AUTOMATION_LAB.RAW.ORDERS LIMIT 5;
+        <div class="code-header"><span>SQL - Creating a Git integration</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Step 1: API integration (connects Snowflake to your Git provider)
+CREATE OR REPLACE API INTEGRATION github_integration
+  API_PROVIDER = GIT_HTTPS_API
+  API_ALLOWED_PREFIXES = ('https://github.com/your-org/')
+  ENABLED = TRUE;
 
--- Look at the import config
-SELECT * FROM BUH_AUTOMATION_LAB.CURATED.IMPORT_CONFIG;</pre>
+-- Step 2: Git repository object
+CREATE OR REPLACE GIT REPOSITORY BUH_HOL.RAW.LAB_REPO
+  API_INTEGRATION = github_integration
+  ORIGIN = 'https://github.com/daltonryan6/buh-automation-hol.git';
+
+-- Step 3: Fetch and browse
+ALTER GIT REPOSITORY BUH_HOL.RAW.LAB_REPO FETCH;
+LS @BUH_HOL.RAW.LAB_REPO/branches/main/scripts/;</pre>
       </div>
+
+      <h3>Why this matters</h3>
+      <table>
+        <tr><th>Without Git workspaces</th><th>With Git workspaces</th></tr>
+        <tr><td>SQL in local files, Slack, shared drives</td><td>SQL versioned in Git with history</td></tr>
+        <tr><td>No code review, no rollback</td><td>Pull requests and peer review</td></tr>
+        <tr><td>"Which version is in prod?" - unknown</td><td>Traceable: commit abc123 is in prod</td></tr>
+        <tr><td>Onboarding = copying files</td><td>Clone and run</td></tr>
+      </table>
 
       <div class="checkpoint">
         <h4>Checkpoint</h4>
-        <p>You should see 8 patients, 10 encounters, 10 orders, and 3 config rows. If any count is off, re-run the setup script from the top.</p>
+        <p>You understand how Git integrations, repository objects, and workspaces connect your team's code to Snowflake.</p>
       </div>
 
       <div class="step-nav">
         <button class="nav-btn nav-btn-prev">&larr; Back</button>
-        <button class="nav-btn nav-btn-next">Next: Parameterized Imports &rarr;</button>
+        <button class="nav-btn nav-btn-next">Next: Dynamic Tables &rarr;</button>
       </div>
     </section>
 
-    <!-- ===================== STEP 2: Parameterized Imports ===================== -->
+    <!-- ===================== STEP 2: Dynamic Tables ===================== -->
     <section class="step" id="step-2">
-      <h2>Parameterized Imports &amp; Reusable Code</h2>
+      <h2>Dynamic Tables</h2>
       <div class="step-meta">
-        <span class="badge badge-time">0:20 - 0:45</span>
-        <span class="badge badge-script">01_parameterized_imports.sql</span>
+        <span class="badge badge-time">0:25 - 0:55</span>
+        <span class="badge badge-script">02_dynamic_tables.sql</span>
       </div>
 
-      <p>Right now, importing each Clarity table means writing a bespoke CTAS statement. For 50+ tables, that is 50+ scripts to maintain. We are going to replace that with <strong>one procedure and one config table</strong>.</p>
+      <p>Dynamic tables flip ETL on its head: you declare <strong>what the result should look like</strong>, and Snowflake figures out <strong>when to refresh it</strong>. No scheduling, no orchestration, no manual MERGE scripts.</p>
 
-      <h3>2.1 The problem</h3>
-      <p>Run Part A in the script to see the hand-coded approach:</p>
+      <h3>2.1 Build the CURATED layer</h3>
+      <p>Run Part B in the script. Each dynamic table declares a transformation and a <code>TARGET_LAG</code> (how fresh data needs to be):</p>
       <div class="code-block">
-        <div class="code-header"><span>SQL - The old way</span><button class="copy-btn">Copy</button></div>
-        <pre>CREATE OR REPLACE TABLE CURATED.DIM_PATIENT AS
+        <div class="code-header"><span>SQL - Example: DIM_PATIENT</span><button class="copy-btn">Copy</button></div>
+        <pre>CREATE OR REPLACE DYNAMIC TABLE BUH_HOL.CURATED.DIM_PATIENT
+  TARGET_LAG = '1 minute'
+  WAREHOUSE = COMPUTE_WH
+AS
 SELECT
-    PAT_ID, PAT_MRN, PAT_FIRST_NAME, PAT_LAST_NAME,
-    BIRTH_DATE, SSN, ADDRESS_LINE_1, CITY, STATE,
-    ZIP_CODE, PHONE, EMAIL, GENDER,
-    CURRENT_TIMESTAMP() AS LOADED_AT
-FROM RAW.PATIENT_DIM;</pre>
+    PAT_ID, PAT_MRN,
+    INITCAP(PAT_FIRST_NAME) AS FIRST_NAME,
+    INITCAP(PAT_LAST_NAME) AS LAST_NAME,
+    BIRTH_DATE,
+    DATEDIFF('year', BIRTH_DATE, CURRENT_DATE()) AS AGE,
+    SSN, PHONE, EMAIL, GENDER,
+    LOAD_TS AS SOURCE_LOADED_AT
+FROM BUH_HOL.RAW.PATIENT_DIM;</pre>
       </div>
-      <p>Now imagine writing that for every table. Every one is slightly different. Every one can have a typo.</p>
 
-      <h3>2.2 The config-driven approach</h3>
-      <p>Check the config table that defines each import:</p>
+      <h3>2.2 Build the GOLD layer</h3>
+      <p>GOLD dynamic tables read from CURATED, which reads from RAW. The whole graph refreshes automatically when RAW changes.</p>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT * FROM BUH_AUTOMATION_LAB.CURATED.IMPORT_CONFIG;</pre>
+        <pre>SELECT * FROM BUH_HOL.GOLD.PATIENT_ENCOUNTER_SUMMARY ORDER BY TOTAL_CHARGES DESC;
+SELECT * FROM BUH_HOL.GOLD.DEPARTMENT_DASHBOARD ORDER BY TOTAL_CHARGES DESC;
+SELECT * FROM BUH_HOL.GOLD.ABNORMAL_RESULTS_SUMMARY;</pre>
       </div>
 
-      <h3>2.3 Build the procedure</h3>
-      <p>Run Part C in the script to create the <code>RUN_IMPORT</code> procedure. This single procedure reads config, builds dynamic SQL, executes the import, and logs what it did.</p>
-
-      <h3>2.4 Run the imports</h3>
+      <h3>2.3 Watch it refresh</h3>
+      <p>Insert a new patient into RAW and watch it propagate through the pipeline automatically:</p>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>CALL CURATED.RUN_IMPORT('PATIENT_DIM', 'BATCH-2024-10-25-001');
-CALL CURATED.RUN_IMPORT('ENCOUNTER_FACT', 'BATCH-2024-10-25-001');
-CALL CURATED.RUN_IMPORT('ORDERS', 'BATCH-2024-10-25-001');</pre>
+        <pre>-- Insert new patient
+INSERT INTO BUH_HOL.RAW.PATIENT_DIM
+  (PAT_ID,PAT_MRN,PAT_FIRST_NAME,PAT_LAST_NAME,BIRTH_DATE,SSN,
+   ADDRESS_LINE_1,CITY,STATE,ZIP_CODE,PHONE,EMAIL,PRIM_LANGUAGE,GENDER)
+VALUES ('P100009','MRN-900009','Elena','Vasquez','2001-02-14',
+        '999-00-1111','500 Atwells Ave','Providence','RI','02909',
+        '401-555-0109','evasquez@example.com','Spanish','Female');
+
+-- Wait ~1 minute, then check CURATED and GOLD
+SELECT * FROM BUH_HOL.CURATED.DIM_PATIENT WHERE PAT_ID = 'P100009';
+SELECT * FROM BUH_HOL.GOLD.PATIENT_ENCOUNTER_SUMMARY WHERE PAT_ID = 'P100009';</pre>
       </div>
 
-      <h3>2.5 Verify</h3>
+      <h3>2.4 Monitor pipeline health</h3>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- Config should show SUCCESS for all three
-SELECT SOURCE_TABLE, TARGET_TABLE, LAST_RUN_TS, LAST_RUN_STATUS
-FROM CURATED.IMPORT_CONFIG;
-
--- Log entries for the batch
-SELECT * FROM LOGS.RUN_LOG ORDER BY LOGGED_AT DESC LIMIT 10;</pre>
+        <pre>SELECT NAME, STATE, REFRESH_START_TIME,
+       DATEDIFF('second', REFRESH_START_TIME, REFRESH_END_TIME) AS SECONDS
+FROM TABLE(INFORMATION_SCHEMA.DYNAMIC_TABLE_REFRESH_HISTORY())
+ORDER BY REFRESH_START_TIME DESC LIMIT 15;</pre>
       </div>
-
-      <div class="callout callout-success">
-        <strong>Key insight</strong>
-        Adding a new Clarity table is now a single INSERT into IMPORT_CONFIG - no new code, no new script, no new deployment.
-      </div>
-
-      <h3>2.6 Bonus: run all imports in one call</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>CALL CURATED.RUN_ALL_IMPORTS('BATCH-2024-10-25-002');</pre>
-      </div>
-
-      <div class="checkpoint">
-        <h4>Checkpoint</h4>
-        <p>All three config rows show LAST_RUN_STATUS = SUCCESS. DIM_PATIENT, FACT_ENCOUNTER, and FACT_ORDERS exist in CURATED with BATCH_ID and LOADED_AT columns.</p>
-      </div>
-
-      <div class="step-nav">
-        <button class="nav-btn nav-btn-prev">&larr; Back</button>
-        <button class="nav-btn nav-btn-next">Next: Vendor Ingestion &rarr;</button>
-      </div>
-    </section>
-
-    <!-- ===================== STEP 3: Vendor Ingestion ===================== -->
-    <section class="step" id="step-3">
-      <h2>Resilient Vendor File Ingestion</h2>
-      <div class="step-meta">
-        <span class="badge badge-time">0:45 - 1:05</span>
-        <span class="badge badge-script">02_vendor_ingestion.sql</span>
-      </div>
-
-      <p>External vendor lab files are messy. Columns appear and disappear. Required fields go missing. Your pipeline needs to handle this without crashing and without silently loading bad data.</p>
-
-      <h3>3.1 Explore the three payloads</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- Good batch: matches expected schema
-SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_GOOD;
-
--- Drifted batch: has extra columns the vendor added
-SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_DRIFTED;
-
--- Invalid batch: missing required fields, bad formats
-SELECT * FROM VENDOR_LANDING.VENDOR_LAB_BATCH_INVALID;</pre>
-      </div>
-
-      <h3>3.2 Build the validator</h3>
-      <p>Run Part B in the script to create the validation function. It checks each row against business rules and returns a pass/fail verdict with specific reasons.</p>
-
-      <h3>3.3 Process each batch</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- Good batch: all rows accepted
-CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_GOOD', 'GOOD-001');
-
--- Drifted batch: rows accepted, but drift logged as WARN
-CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_DRIFTED', 'DRIFT-001');
-
--- Invalid batch: bad rows quarantined with reasons
-CALL VENDOR_LANDING.PROCESS_VENDOR_BATCH('VENDOR_LAB_BATCH_INVALID', 'INVALID-001');</pre>
-      </div>
-
-      <h3>3.4 Inspect results</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- 7 accepted, 4 quarantined
-SELECT 'ACCEPTED' AS STATUS, COUNT(*) AS CNT FROM VENDOR_LANDING.VENDOR_LAB_ACCEPTED
-UNION ALL
-SELECT 'QUARANTINED', COUNT(*) FROM VENDOR_LANDING.VENDOR_LAB_QUARANTINE;
-
--- See WHY rows were rejected
-SELECT VENDOR_ID, PAT_MRN, BATCH_ID, REJECTION_REASONS::VARCHAR AS REASONS
-FROM VENDOR_LANDING.VENDOR_LAB_QUARANTINE;</pre>
-      </div>
-
-      <div class="expected-output">
-        <strong>Expected output</strong>
-        ACCEPTED: 7 rows (5 good + 2 drifted) | QUARANTINED: 4 rows (all from invalid batch) | WARN log entries for schema drift and quarantine count
-      </div>
-
-      <div class="callout callout-warn">
-        <strong>Discussion: Idempotency</strong>
-        Re-running a batch currently duplicates rows. In production, you would use MERGE or DELETE+INSERT keyed on BATCH_ID. The reset pattern is shown in Part F of the script.
-      </div>
-
-      <div class="checkpoint">
-        <h4>Checkpoint</h4>
-        <p>Accepted table has 7 rows. Quarantine has 4 rows with specific rejection reasons as arrays. The log shows WARN entries for drift and quarantine counts.</p>
-      </div>
-
-      <div class="step-nav">
-        <button class="nav-btn nav-btn-prev">&larr; Back</button>
-        <button class="nav-btn nav-btn-next">Next: Logging &amp; Monitoring &rarr;</button>
-      </div>
-    </section>
-
-    <!-- ===================== STEP 4: Logging ===================== -->
-    <section class="step" id="step-4">
-      <h2>Centralized Logging &amp; Error Reporting</h2>
-      <div class="step-meta">
-        <span class="badge badge-time">1:05 - 1:25</span>
-        <span class="badge badge-script">03_logging_and_monitoring.sql</span>
-      </div>
-
-      <p>Every procedure you built in the previous steps has been writing to the same RUN_LOG table. Now you will query it as a single pane of glass for pipeline observability.</p>
-
-      <h3>4.1 View all log entries</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT * FROM LOGS.RUN_LOG ORDER BY LOGGED_AT DESC;</pre>
-      </div>
-
-      <h3>4.2 Build the batch health view</h3>
-      <p>Run Parts B and C in the script. The BATCH_HEALTH view shows a RED/YELLOW/GREEN status per batch:</p>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT * FROM LOGS.BATCH_HEALTH;</pre>
-      </div>
-
-      <div class="expected-output">
-        <strong>Expected output</strong>
-        BATCH and GOOD batches show GREEN. DRIFT batch shows YELLOW (warnings). INVALID batch shows YELLOW (quarantine warnings). Any batch with ERRORs would show RED.
-      </div>
-
-      <h3>4.3 Extract structured detail from VARIANT</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT
-    RUN_ID,
-    MESSAGE,
-    DETAIL:rows_loaded::NUMBER AS ROWS_LOADED,
-    DETAIL:target::VARCHAR AS TARGET_TABLE
-FROM LOGS.RUN_LOG
-WHERE DETAIL:rows_loaded IS NOT NULL;</pre>
-      </div>
-
-      <h3>4.4 Reusable logger</h3>
-      <p>Run Part D to create a generic LOG_EVENT procedure. Any future procedure can call it for consistent logging.</p>
 
       <div class="callout callout-info">
-        <strong>Production extensions</strong>
-        Event tables (SYSTEM$LOG) capture system-level telemetry automatically. Snowflake Alerts can watch RUN_LOG and email on errors. Both are discussed in Parts E and F of the script.
+        <strong>TARGET_LAG guidance</strong>
+        1 minute = near real-time dashboards. 15 minutes = operational reporting. 1 hour = standard analytics. DOWNSTREAM = refresh only when a consumer needs it.
       </div>
 
       <div class="checkpoint">
         <h4>Checkpoint</h4>
-        <p>BATCH_HEALTH view returns colored status per batch. Structured detail fields are queryable from the VARIANT column. The centralized logger works.</p>
+        <p>7 dynamic tables created (4 CURATED + 3 GOLD). New patient P100009 appears in all layers after refresh. Refresh history shows successful runs.</p>
       </div>
 
       <div class="step-nav">
         <button class="nav-btn nav-btn-prev">&larr; Back</button>
-        <button class="nav-btn nav-btn-next">Next: Governance &amp; Masking &rarr;</button>
+        <button class="nav-btn nav-btn-next">Next: Power BI &amp; Iceberg &rarr;</button>
       </div>
     </section>
 
-    <!-- ===================== STEP 5: Governance ===================== -->
-    <section class="step" id="step-5">
-      <h2>Governance, RBAC &amp; Masking</h2>
+    <!-- ===================== STEP 3: Power BI / Iceberg ===================== -->
+    <section class="step" id="step-3">
+      <h2>Power BI, Iceberg Tables &amp; Microsoft Fabric</h2>
       <div class="step-meta">
-        <span class="badge badge-time">1:25 - 1:45</span>
-        <span class="badge badge-script">04_governance_rbac_masking.sql</span>
+        <span class="badge badge-time">0:55 - 1:20</span>
+        <span class="badge badge-script">03_powerbi_iceberg_fabric.sql</span>
       </div>
 
-      <p>Right now, every role can see every SSN, every phone number, and every encounter. That is not acceptable for production. You will apply <strong>reusable masking policies</strong> and <strong>row-access controls</strong> and test them across three roles.</p>
+      <h3>3.1 Power BI connection options</h3>
+      <table>
+        <tr><th>Option</th><th>How it works</th><th>Snowflake cost</th><th>Best for</th></tr>
+        <tr><td><strong>DirectQuery</strong></td><td>Power BI sends SQL to Snowflake at query time</td><td>Warehouse runs during dashboard use</td><td>Operational dashboards, moderate concurrency</td></tr>
+        <tr><td><strong>Import</strong></td><td>Power BI extracts data on a schedule</td><td>Warehouse runs only during refresh</td><td>Executive dashboards refreshed daily</td></tr>
+        <tr><td><strong>Direct Lake (Fabric)</strong></td><td>Snowflake writes Iceberg to OneLake; Power BI reads Parquet</td><td>Warehouse runs only to write Iceberg</td><td>Minimizing Snowflake compute for BI</td></tr>
+      </table>
 
-      <h3>5.1 See the problem</h3>
+      <h3>3.2 Fabric consumption - what to watch</h3>
+      <div class="callout callout-warn">
+        <strong>Fabric CU overconsumption</strong>
+        All Fabric workloads (Power BI, Spark, SQL endpoint) share one pool of Capacity Units. Direct Lake reads consume CUs from that pool. If you undersize the capacity, workloads queue and throttle. The cheapest path: keep your pipeline in Snowflake, write only GOLD as Iceberg to OneLake, and size Fabric capacity for BI read load only.
+      </div>
+
+      <h3>3.3 Iceberg tables (hands-on)</h3>
+      <p>Iceberg tables use the same SQL as regular Snowflake tables, but the data is stored in open Parquet format. Any engine that reads Iceberg can access it.</p>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>-- All PII visible right now
-SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
-FROM RAW.PATIENT_DIM LIMIT 5;</pre>
+        <pre>-- See the Iceberg table created in the script
+SELECT * FROM BUH_HOL.GOLD.DEPT_DASHBOARD_ICEBERG
+ORDER BY TOTAL_CHARGES DESC;</pre>
       </div>
 
-      <h3>5.2 Create and apply masking policies</h3>
-      <p>Run Parts B and C in the script. The SSN_MASK and PII_STRING_MASK policies are created once in the GOVERNANCE schema and applied to multiple columns.</p>
+      <h3>3.4 Iceberg for OneLake (the Microsoft-recommended pattern)</h3>
+      <p>The setup requires an external volume pointing to OneLake and a Fabric workspace. The script walks through the SQL; in production you would:</p>
+      <ol>
+        <li>Create an external volume pointing to <code>azure://onelake.dfs.fabric.microsoft.com/...</code></li>
+        <li>Create Iceberg tables using that volume</li>
+        <li>Power BI connects via Direct Lake - no Snowflake warehouse needed for reads</li>
+      </ol>
 
-      <h3>5.3 Test across roles</h3>
-      <p>On a trial account your user inherits ACCOUNTADMIN, so a plain <code>USE ROLE</code> switch still resolves the admin check as TRUE. We use <code>EXECUTE USING POLICY_CONTEXT</code> to simulate each role cleanly:</p>
+      <h3>3.5 Purview integration</h3>
+      <p>Purview <strong>can</strong> scan Snowflake accounts (tables, views, stored procedures, lineage). For Iceberg tables in OneLake, Purview sees both the Snowflake definition and the Parquet files. However, <strong>Snowflake tags and Purview sensitivity labels are separate systems</strong> - they do not auto-sync.</p>
+
+      <h3>3.6 When to use which table type</h3>
+      <table>
+        <tr><th>Layer</th><th>Recommended</th><th>Why</th></tr>
+        <tr><td>RAW</td><td>Snowflake default</td><td>Fast ingest, time travel, streams</td></tr>
+        <tr><td>CURATED</td><td>Snowflake default (dynamic tables)</td><td>Joins, transforms, incremental refresh</td></tr>
+        <tr><td>GOLD / Datamart</td><td>Iceberg (to OneLake)</td><td>Open format, Power BI Direct Lake, no SF compute for BI</td></tr>
+      </table>
+
+      <div class="checkpoint">
+        <h4>Checkpoint</h4>
+        <p>You understand the three Power BI options, why Fabric CUs are the cost lever to watch, how Iceberg tables work, and that Purview/Snowflake tags are separate systems.</p>
+      </div>
+
+      <div class="step-nav">
+        <button class="nav-btn nav-btn-prev">&larr; Back</button>
+        <button class="nav-btn nav-btn-next">Next: Tags &amp; Governance &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ===================== STEP 4: Tags ===================== -->
+    <section class="step" id="step-4">
+      <h2>Tags, Sensitivity Labels &amp; Governance</h2>
+      <div class="step-meta">
+        <span class="badge badge-time">1:20 - 1:45</span>
+        <span class="badge badge-script">04_tags_and_governance.sql</span>
+      </div>
+
+      <h3>4.1 Where do tags apply?</h3>
+      <table>
+        <tr><th>Object</th><th>Example tag</th></tr>
+        <tr><td>Warehouse</td><td>cost_center = 'Research'</td></tr>
+        <tr><td>Database</td><td>data_domain = 'Clinical'</td></tr>
+        <tr><td>Schema</td><td>data_layer = 'RAW'</td></tr>
+        <tr><td>Table / View</td><td>contains_phi = 'Yes'</td></tr>
+        <tr><td>Column</td><td>pii_type = 'SSN'</td></tr>
+      </table>
+      <p>Tags <strong>cannot</strong> be applied to individual rows, stages, file formats, users, or roles.</p>
+
+      <h3>4.2 Create and apply tags</h3>
+      <p>Run Parts B and C in the script to create PII_TYPE, SENSITIVITY, DATA_DOMAIN, and COST_CENTER tags, then apply them to columns and objects.</p>
+
+      <h3>4.3 Query tags - find all PII</h3>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>SELECT OBJECT_NAME AS TABLE_NAME, COLUMN_NAME, TAG_VALUE AS PII_TYPE
+FROM SNOWFLAKE.ACCOUNT_USAGE.TAG_REFERENCES
+WHERE TAG_NAME = 'PII_TYPE' AND DOMAIN = 'COLUMN'
+  AND OBJECT_DATABASE = 'BUH_HOL'
+ORDER BY TABLE_NAME, COLUMN_NAME;</pre>
+      </div>
+
+      <h3>4.4 Tag-based masking</h3>
+      <p>Instead of attaching masking policies column by column, attach them to a <strong>tag</strong>. Every column with that tag is automatically protected.</p>
+      <div class="code-block">
+        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
+        <pre>-- Attach masking policy to tag (not to columns!)
+ALTER TAG BUH_HOL.GOVERNANCE.PII_TYPE SET
+  MASKING POLICY BUH_HOL.GOVERNANCE.MASK_PII_STRING;</pre>
+      </div>
+
+      <h3>4.5 Test masking across roles</h3>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
         <pre>-- ADMIN sees everything
-EXECUTE USING POLICY_CONTEXT(
-    CURRENT_ROLE => 'BUH_LAB_ADMIN'
-)
-SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
-FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;
+EXECUTE USING POLICY_CONTEXT(CURRENT_ROLE => 'BUH_LAB_ADMIN')
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, EMAIL, BIRTH_DATE
+FROM BUH_HOL.RAW.PATIENT_DIM LIMIT 3;
 
--- CLINICIAN sees names and phone, SSN last-4 only
-EXECUTE USING POLICY_CONTEXT(
-    CURRENT_ROLE => 'BUH_LAB_CLINICIAN'
-)
-SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
-FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;
+-- CLINICIAN sees names/email, SSN last-4, DOB visible
+EXECUTE USING POLICY_CONTEXT(CURRENT_ROLE => 'BUH_LAB_CLINICIAN')
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, EMAIL, BIRTH_DATE
+FROM BUH_HOL.RAW.PATIENT_DIM LIMIT 3;
 
--- ANALYST sees masked everything
-EXECUTE USING POLICY_CONTEXT(
-    CURRENT_ROLE => 'BUH_LAB_ANALYST'
-)
-SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, PHONE, EMAIL
-FROM BUH_AUTOMATION_LAB.RAW.PATIENT_DIM LIMIT 3;</pre>
+-- ANALYST sees masked PII
+EXECUTE USING POLICY_CONTEXT(CURRENT_ROLE => 'BUH_LAB_ANALYST')
+SELECT PAT_FIRST_NAME, PAT_LAST_NAME, SSN, EMAIL, BIRTH_DATE
+FROM BUH_HOL.RAW.PATIENT_DIM LIMIT 3;</pre>
       </div>
 
       <div class="expected-output">
-        <strong>Expected results</strong>
+        <strong>Expected masking results</strong>
         <table>
-          <tr><th>Role</th><th>First Name</th><th>SSN</th><th>Phone</th></tr>
-          <tr><td>ADMIN</td><td>Maria</td><td>111-22-3333</td><td>401-555-0101</td></tr>
-          <tr><td>CLINICIAN</td><td>Maria</td><td>***-**-3333</td><td>401-555-0101</td></tr>
-          <tr><td>ANALYST</td><td>***MASKED***</td><td>***-**-****</td><td>***MASKED***</td></tr>
+          <tr><th>Role</th><th>First Name</th><th>SSN</th><th>Email</th><th>DOB</th></tr>
+          <tr><td>ADMIN</td><td>Maria</td><td>111-22-3333</td><td>msantos@example.com</td><td>1965-03-14</td></tr>
+          <tr><td>CLINICIAN</td><td>Maria</td><td>***-**-3333</td><td>msantos@example.com</td><td>1965-03-14</td></tr>
+          <tr><td>ANALYST</td><td>***MASKED***</td><td>***-**-****</td><td>***MASKED***</td><td>NULL</td></tr>
         </table>
       </div>
 
-      <h3>5.4 Row-access policy</h3>
-      <p>Run Part E. Clinicians can only see encounters from departments they are mapped to (Cardiology and Primary Care). Analysts and admins see everything.</p>
+      <h3>4.6 Automatic classification</h3>
+      <p>Snowflake can auto-detect PII using <code>SYSTEM$CLASSIFY</code>. It scans column names and data patterns to recommend tags. In production, a classification profile runs this on a schedule across your database.</p>
 
-      <h3>5.5 Audit existing policies</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SHOW MASKING POLICIES IN DATABASE BUH_AUTOMATION_LAB;
-SHOW ROW ACCESS POLICIES IN DATABASE BUH_AUTOMATION_LAB;</pre>
-      </div>
-
-      <div class="callout callout-warn">
-        <strong>Important</strong>
-        Masking policies on a base table do NOT automatically propagate to CTAS copies. CURATED tables created by RUN_IMPORT are unprotected unless you also apply policies there, use secure views, or use tag-based masking (which does propagate through lineage).
-      </div>
+      <h3>4.7 Tags vs Purview labels</h3>
+      <table>
+        <tr><th></th><th>Snowflake Tags</th><th>Purview Labels</th></tr>
+        <tr><td>Applied in</td><td>Snowflake</td><td>Microsoft ecosystem</td></tr>
+        <tr><td>Drives</td><td>Masking policies, access controls</td><td>DLP, encryption, M365/Fabric access</td></tr>
+        <tr><td>Queryable via</td><td>TAG_REFERENCES</td><td>Purview Data Map</td></tr>
+        <tr><td>Auto-sync?</td><td colspan="2" style="text-align:center"><strong>No</strong> - separate systems, align manually</td></tr>
+      </table>
 
       <div class="checkpoint">
         <h4>Checkpoint</h4>
-        <p>SSN shows differently for each role. Clinician sees 4 encounters (Cardiology + Primary Care), not all 10. Policy audit queries return the applied policies.</p>
+        <p>Tags applied to columns and objects. Tag-based masking protects all PII columns at once. Masking varies by role. You understand the Snowflake tags vs Purview labels distinction.</p>
       </div>
 
       <div class="step-nav">
         <button class="nav-btn nav-btn-prev">&larr; Back</button>
-        <button class="nav-btn nav-btn-next">Next: AI Capstone &rarr;</button>
+        <button class="nav-btn nav-btn-next">Next: Putting It Together &rarr;</button>
       </div>
     </section>
 
-    <!-- ===================== STEP 6: AI Capstone ===================== -->
-    <section class="step" id="step-6">
-      <h2>AI &amp; Multimodal Capstone</h2>
+    <!-- ===================== STEP 5: Together ===================== -->
+    <section class="step" id="step-5">
+      <h2>Putting It Together</h2>
       <div class="step-meta">
         <span class="badge badge-time">1:45 - 1:55</span>
-        <span class="badge badge-script">05_ai_multimodal_capstone.sql</span>
+        <span class="badge badge-script">05_putting_it_together.sql</span>
       </div>
 
-      <p>This optional module shows how AI fits <em>into</em> the pipeline you already built - not as a separate initiative, but as an accelerator for annotation, extraction, and cataloging.</p>
+      <h3>The architecture you built</h3>
+      <pre style="background:var(--code-bg);color:var(--code-text);padding:1.5rem;border-radius:8px;font-size:0.85rem;overflow-x:auto;">
+  [Git Repo] --> [Snowflake Workspace]
+       |
+       v
+  RAW (default tables - Clarity extracts)
+       |  dynamic tables auto-refresh
+       v
+  CURATED (DIM_PATIENT, FACT_ENCOUNTER, FACT_LAB_RESULTS)
+       |  dynamic tables auto-refresh
+       v
+  GOLD (PATIENT_ENCOUNTER_SUMMARY, DEPT_DASHBOARD, ABNORMAL_RESULTS)
+       |
+       +--> Snowflake default tables (analytics, AI, sharing)
+       |
+       +--> Iceberg tables in OneLake (Power BI Direct Lake)
 
-      <div class="callout callout-info">
-        <strong>Cortex requirement</strong>
-        Parts A-C use SNOWFLAKE.CORTEX.AI_COMPLETE and AI_EXTRACT. If these are not enabled in your account, use the commented-out fallback queries in the script. The learning point is the pattern, not the model output.
-      </div>
+  GOVERNANCE layer (tags + masking policies) applies across ALL layers
+      </pre>
 
-      <h3>6.1 Summarize clinical notes</h3>
+      <h3>Verify end-to-end</h3>
       <div class="code-block">
         <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT
-    NOTE_ID,
-    NOTE_TYPE,
-    SNOWFLAKE.CORTEX.AI_COMPLETE(
-        'llama3.1-8b',
-        'Summarize this clinical note in 2-3 sentences. '
-        || 'Extract: primary diagnosis, key findings, and plan. Note: '
-        || NOTE_TEXT
-    ) AS AI_SUMMARY
-FROM RAW.CLINICAL_NOTES;</pre>
+        <pre>SELECT 'RAW.PATIENT_DIM' AS LAYER, COUNT(*) AS ROWS FROM BUH_HOL.RAW.PATIENT_DIM
+UNION ALL SELECT 'CURATED.DIM_PATIENT', COUNT(*) FROM BUH_HOL.CURATED.DIM_PATIENT
+UNION ALL SELECT 'CURATED.FACT_ENCOUNTER', COUNT(*) FROM BUH_HOL.CURATED.FACT_ENCOUNTER
+UNION ALL SELECT 'GOLD.PATIENT_ENCOUNTER_SUMMARY', COUNT(*) FROM BUH_HOL.GOLD.PATIENT_ENCOUNTER_SUMMARY
+UNION ALL SELECT 'GOLD.DEPARTMENT_DASHBOARD', COUNT(*) FROM BUH_HOL.GOLD.DEPARTMENT_DASHBOARD
+ORDER BY LAYER;</pre>
       </div>
 
-      <h3>6.2 Extract structured fields</h3>
-      <div class="code-block">
-        <div class="code-header"><span>SQL</span><button class="copy-btn">Copy</button></div>
-        <pre>SELECT
-    NOTE_ID,
-    SNOWFLAKE.CORTEX.AI_EXTRACT(
-        NOTE_TEXT,
-        ARRAY_CONSTRUCT('primary_diagnosis', 'medications', 'follow_up_plan')
-    ) AS EXTRACTED
-FROM RAW.CLINICAL_NOTES;</pre>
-      </div>
-
-      <h3>6.3 Where AI fits in the pipeline</h3>
-      <table>
-        <tr><th>Pipeline Stage</th><th>AI Application</th></tr>
-        <tr><td>Parameterized imports</td><td>AI_COMPLETE for auto-generating column descriptions</td></tr>
-        <tr><td>Vendor ingestion</td><td>AI_EXTRACT to normalize inconsistent vendor formats</td></tr>
-        <tr><td>Logging</td><td>AI_SUMMARIZE on error logs to surface patterns</td></tr>
-        <tr><td>Governance</td><td>SYSTEM$CLASSIFY to detect PII automatically</td></tr>
-      </table>
-
-      <div class="callout callout-success">
-        <strong>Key takeaway</strong>
-        The work in Scripts 01-04 is the foundation. AI accelerates it - it does not replace it.
-      </div>
+      <h3>Next steps for your environment</h3>
+      <ol>
+        <li><strong>Workspaces</strong> - Connect your GitLab/GitHub and store all SQL in version control</li>
+        <li><strong>Dynamic Tables</strong> - Replace scheduled CTAS/MERGE scripts; set TARGET_LAG by business need</li>
+        <li><strong>Iceberg + OneLake</strong> - Set up external volume; write GOLD as Iceberg; connect Power BI via Direct Lake</li>
+        <li><strong>Tags</strong> - Define your taxonomy; run SYSTEM$CLASSIFY; attach masking to tags</li>
+        <li><strong>Cost</strong> - Tag warehouses for chargeback; right-size Fabric capacity for BI reads only</li>
+      </ol>
 
       <div class="step-nav">
         <button class="nav-btn nav-btn-prev">&larr; Back</button>
@@ -467,39 +413,32 @@ FROM RAW.CLINICAL_NOTES;</pre>
       </div>
     </section>
 
-    <!-- ===================== STEP 7: Recap ===================== -->
-    <section class="step" id="step-7">
+    <!-- ===================== STEP 6: Recap ===================== -->
+    <section class="step" id="step-6">
       <h2>Recap &amp; Cleanup</h2>
       <div class="step-meta">
         <span class="badge badge-time">1:55 - 2:00</span>
         <span class="badge badge-script">06_cleanup.sql</span>
       </div>
 
-      <h3>What you built</h3>
+      <h3>What you learned</h3>
       <table>
-        <tr><th>Layer</th><th>What</th><th>Key Object</th></tr>
-        <tr><td>Automate</td><td>Config-driven import procedure</td><td>CURATED.RUN_IMPORT</td></tr>
-        <tr><td>Validate</td><td>Vendor ingestion with quarantine</td><td>VENDOR_LANDING.PROCESS_VENDOR_BATCH</td></tr>
-        <tr><td>Observe</td><td>Centralized structured logging</td><td>LOGS.RUN_LOG + BATCH_HEALTH</td></tr>
-        <tr><td>Govern</td><td>Reusable masking and row-access</td><td>GOVERNANCE.SSN_MASK, PII_STRING_MASK</td></tr>
+        <tr><th>Topic</th><th>Key takeaway</th></tr>
+        <tr><td>Shared Workspaces</td><td>Git-connected, versioned SQL replaces file-share chaos</td></tr>
+        <tr><td>Dynamic Tables</td><td>Declare the result, Snowflake handles the schedule and incremental refresh</td></tr>
+        <tr><td>Power BI / Iceberg</td><td>Write GOLD as Iceberg to OneLake; Power BI reads via Direct Lake with no SF compute</td></tr>
+        <tr><td>Fabric Cost</td><td>All Fabric workloads share CUs; size capacity for BI reads, keep pipeline in Snowflake</td></tr>
+        <tr><td>Tags</td><td>Apply to warehouses, databases, schemas, tables, columns; drive masking and discovery</td></tr>
+        <tr><td>Tag-based Masking</td><td>Attach policy to a tag, not to each column individually</td></tr>
+        <tr><td>Purview</td><td>Scans Snowflake directly; tags and labels are separate systems</td></tr>
       </table>
 
-      <h3>Production next steps</h3>
-      <ul>
-        <li><strong>Scheduling</strong> - Wrap RUN_ALL_IMPORTS in a Snowflake Task on a CRON schedule</li>
-        <li><strong>Idempotency</strong> - Switch vendor ingestion to MERGE or DELETE+INSERT</li>
-        <li><strong>Event tables</strong> - Add SYSTEM$LOG calls for system-level telemetry</li>
-        <li><strong>Alerting</strong> - Create Alerts that watch RUN_LOG and email on ERROR</li>
-        <li><strong>Tag-based masking</strong> - Run SYSTEM$CLASSIFY, then attach policies to tags so they follow data through lineage</li>
-        <li><strong>Dynamic tables</strong> - Replace CTAS imports with dynamic tables for incremental refresh</li>
-      </ul>
-
       <h3>Cleanup</h3>
-      <p>When you are finished, run the cleanup script to remove all lab objects:</p>
       <div class="code-block">
         <div class="code-header"><span>SQL - 06_cleanup.sql</span><button class="copy-btn">Copy</button></div>
         <pre>USE ROLE ACCOUNTADMIN;
-DROP DATABASE IF EXISTS BUH_AUTOMATION_LAB;
+ALTER WAREHOUSE COMPUTE_WH UNSET TAG BUH_HOL.GOVERNANCE.COST_CENTER;
+DROP DATABASE IF EXISTS BUH_HOL;
 DROP ROLE IF EXISTS BUH_LAB_CLINICIAN;
 DROP ROLE IF EXISTS BUH_LAB_ANALYST;
 DROP ROLE IF EXISTS BUH_LAB_ADMIN;</pre>
@@ -507,7 +446,7 @@ DROP ROLE IF EXISTS BUH_LAB_ADMIN;</pre>
 
       <div class="callout callout-success">
         <strong>Thank you!</strong>
-        Questions, feedback, or follow-up requests are welcome. The repository contains everything you need to re-run this lab independently.
+        The repository contains everything you need to re-run this lab independently. Questions and follow-up requests are welcome.
       </div>
 
       <div class="step-nav">
