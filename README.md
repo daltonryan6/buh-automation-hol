@@ -16,15 +16,15 @@ This lab walks through the real workflow of replacing hand-coded Epic Clarity ta
 
 ### Prerequisites
 
-- A Snowflake account (trial or existing) with ACCOUNTADMIN or a role that can create databases, warehouses, and roles
-- A warehouse named `COMPUTE_WH` (or edit the setup script to match yours)
-- Cortex Code or any SQL worksheet environment
+1. **Snowflake account** - Sign up for a free trial at [signup.snowflake.com](https://signup.snowflake.com/) (Enterprise edition, any cloud/region) or use an existing account
+2. Log in with the **ACCOUNTADMIN** role
+3. The setup script creates a warehouse named `COMPUTE_WH` if it does not exist - no pre-configuration needed
 
 ### Quick start
 
-1. Clone this repository into a Snowflake Git workspace or download the scripts folder
+1. Clone this repository into a Snowflake Git Integration workspace, or download the `scripts/` folder directly
 2. Open `scripts/00_setup.sql` and run it end-to-end - it creates the lab database, schemas, roles, synthetic data, and sample vendor files
-3. Follow the guided website (open `index.html` locally) or work through the numbered scripts in order
+3. Follow the guided website at [daltonryan6.github.io/buh-automation-hol](https://daltonryan6.github.io/buh-automation-hol/) or work through the numbered scripts in order
 
 ### Session flow (120 minutes)
 
